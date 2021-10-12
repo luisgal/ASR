@@ -1,5 +1,5 @@
 import os
-from CreateRRD import create
+from P2.utilidades.CreateRRD import create
 
 def alta(file):
     print('Para agregar un dispositivo asegurate de utilizar el siguiente formato: ')

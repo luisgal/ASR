@@ -1,6 +1,6 @@
 import os.path
 import rrdtool
-from getSNMP import consultaSNMP
+from P2.utilidades.getSNMP import consultaSNMP
 
 def updateDisp(disp):
     if(disp[4]=='ivan'):

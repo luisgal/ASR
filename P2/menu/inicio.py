@@ -1,6 +1,6 @@
 import os.path
-from CreateRRD import create
-from getSNMP import consultaSNMP
+from P2.utilidades.CreateRRD import create
+from P2.utilidades.getSNMP import consultaSNMP
 
 def inicio(file):
     file_dispositivos = open(file)

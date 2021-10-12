@@ -1,8 +1,8 @@
-from graphRRD import graph
+from P2.utilidades.graphRRD import graph
 from reportlab.pdfgen import canvas
-from getSNMP import consultaSNMP
+from P2.utilidades.getSNMP import consultaSNMP
 from datetime import timedelta
-import binascii
+
 
 def mostrarDispositivos(file):
     file_dispR = open(file, 'r')

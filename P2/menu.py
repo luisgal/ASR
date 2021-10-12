@@ -1,7 +1,7 @@
-from inicio import inicio
-from manejoDispositivos import alta
-from manejoDispositivos import baja
-from reporte import crearReport
+from P2.menu.inicio import inicio
+from P2.utilidades.manejoDispositivos import alta
+from P2.utilidades.manejoDispositivos import baja
+from P2.utilidades.reporte import crearReport
 
 file = 'dispositivos.txt'
 def menu():
