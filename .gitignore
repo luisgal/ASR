@@ -1,4 +1,7 @@
 
 P1/__pycache__/
+*.rrd
 
-P1/baseD/
+P2/__pycache__/
+
+.idea/
