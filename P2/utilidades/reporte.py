@@ -18,7 +18,7 @@ def mostrarDispositivos(file, mostrar):
     file_dispR.close()
     return dispositivos
 
-def crearReport(file, umbral=[[77,65,50],[90,75,50],[95,75,30]], numFile=None, postName="", mostrar=True):
+def crearReport(file, umbral=[[77,65,40],[85,75,50],[90,75,30]], numFile=None, postName="", mostrar=True):
     dispositivos = mostrarDispositivos(file, mostrar)
     if(numFile==None):
         print("Elige el dispositivo que deseas consultar: ", end='')
