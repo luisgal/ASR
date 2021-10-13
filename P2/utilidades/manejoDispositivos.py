@@ -9,7 +9,7 @@ def alta(file):
     print('Dispositivo: ', end='')
     newDisp = input()
     file_dispositivos = open(file, 'a')
-    file_dispositivos.write(newDisp)
+    file_dispositivos.write(newDisp + "1") #Add 0 - Status correcto
     file_dispositivos.write('\n')
     file_dispositivos.close()
     create(newDisp.split()[4])

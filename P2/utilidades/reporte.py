@@ -3,35 +3,40 @@ from reportlab.pdfgen import canvas
 from P2.utilidades.getSNMP import consultaSNMP
 from datetime import timedelta
 
-
-def mostrarDispositivos(file):
+def mostrarDispositivos(file, mostrar):
     file_dispR = open(file, 'r')
     dispositivos = []
     disp = file_dispR.readline()
     x = 0
     while (disp):
         x+=1
-        print("Dispositivo",x)
-        print("\t",disp)
+        if(mostrar):
+            print("Dispositivo",x)
+            print("\t",disp)
         dispositivos.append(disp)
         disp = file_dispR.readline()
     file_dispR.close()
     return dispositivos
 
-def crearReport(file):
-    dispositivos = mostrarDispositivos(file)
-    print("Elige el dispositivo que deseas consultar: ", end='')
-    opc = input()
-    disp = dispositivos[int(opc)-1].split()
+def crearReport(file, umbral=[[77,65,50],[90,75,50],[95,75,30]], numFile=None, postName="", mostrar=True):
+    dispositivos = mostrarDispositivos(file, mostrar)
+    if(numFile==None):
+        print("Elige el dispositivo que deseas consultar: ", end='')
+        opc = input()
+        disp = dispositivos[int(opc)-1].split()
+    else:
+        disp = dispositivos[numFile - 1].split()
 
-    graph('Paquetes unicast que ha \nrecibido la interfaz Wireless', 'ifInUcastPkts', disp[4], 'Numero de paquetes')
-    graph('Paquetes recibidos a protocolos ipv4, incluyendo los que tienen errores', 'ipInReceives', disp[4], 'Numero de paquetes')
-    graph('Mensajes ICMP echo que ha \nenviado el agente', 'icmpOutEchos', disp[4], 'Numero de mesajes')
-    graph('Segmentos recibidos, incluyendo \nlos que han renido errores', 'tcpInSegs', disp[4], 'Numero de segmentos')
-    graph('Datagramas entregados a usuarios UDP', 'udpOutDatagrams', disp[4], 'Numero de datagramas')
+    status = []
+
+    status.append(graph('Porcentaje de CPU utiliazdo', "percentageCPU", disp[4], 'Porcentaje', umbral[0]))
+    status.append(graph('Porcentaje de RAM utiliazdo', "percentageRAM", disp[4], 'Porcentaje', umbral[1]))
+    status.append(graph('Porcentaje de Disk utiliazdo', "percentageDisk", disp[4], 'Porcentaje', umbral[2]))
+
+    stat = max(status)
 
     #generar PDF
-    c = canvas.Canvas("./report/ReporteDisp"+disp[4]+".pdf")
+    c = canvas.Canvas("./report/ReporteDisp"+disp[4]+postName+".pdf")
     c.setFont("Helvetica",20) #Titulos
     c.drawString(25,800,"Resporte de Dispositivo")
 
@@ -59,20 +64,18 @@ def crearReport(file):
         int(dateT[20:22],16),       #Hoours from UTC
         int(dateT[22:24],16))       #Minutes from UTC
 
-    c.drawString(25, 780, "Nombre del dispositivo: "+name)
-    c.drawString(25, 765, "Version: " + version)
-    c.drawString(25, 750, "Ubicacion: " + ubi)
+    c.drawString(25, 780, "Nombre del dispositivo: "+ str(name))
+    c.drawString(25, 765, "Version: " + str(version))
+    c.drawString(25, 750, "Ubicacion: " + str(ubi))
     c.drawString(25, 735, "Tiempo en actividad: " + str(tiempo))
-    c.drawString(25, 720, "Hora del dispositivo: " + dateT_)
-    c.drawString(25, 705, "Comunidad: " + comunidad)
-    c.drawString(25, 690, "Host/IP: " + ip)
+    c.drawString(25, 720, "Hora del dispositivo: " + str(dateT_))
+    c.drawString(25, 705, "Comunidad: " + str(comunidad))
+    c.drawString(25, 690, "Host/IP: " + str(ip))
 
-    c.drawImage("./graph/ifInUcastPkts" + disp[4] + ".png",25,540,265,125)
-    c.drawImage("./graph/ipInReceives" + disp[4] + ".png", 300, 540,265,125)
-    c.drawImage("./graph/icmpOutEchos" + disp[4] + ".png", 25, 350,265,125)
-    c.drawImage("./graph/tcpInSegs" + disp[4] + ".png", 300, 350,265,125)
-    c.drawImage("./graph/udpOutDatagrams" + disp[4] + ".png", 25, 160,265,125)
+    c.drawImage("./graph/percentageCPU" + disp[4] + ".png", 25, 540, 265, 125)
+    c.drawImage("./graph/percentageRAM" + disp[4] + ".png", 300, 540, 265, 125)
+    c.drawImage("./graph/percentageDisk" + disp[4] + ".png", 25, 350, 265, 125)
 
     c.save()
 
-
+    return stat

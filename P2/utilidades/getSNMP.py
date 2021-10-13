@@ -8,6 +8,8 @@ def consultaSNMP(comunidad,host,oid):
                ContextData(),
                ObjectType(ObjectIdentity(oid))))
 
+    resultado = -1
+
     if errorIndication:
         print(errorIndication)
     elif errorStatus:
@@ -16,4 +18,5 @@ def consultaSNMP(comunidad,host,oid):
         for varBind in varBinds:
             varB=(' = '.join([x.prettyPrint() for x in varBind]))
             resultado = varB.split()[2]
-        return resultado
+
+    return resultado
